@@ -2,7 +2,7 @@
 
 A parse transform that turns group calls to `lists:keyfind/3` and such into one-passes.
 
-For example, this code running in `4·O(length(Article))`
+For example, this code running in `4·O(N)` (where `N = length(Article)`)
 
 ```erlang
 meta (Article) ->
@@ -13,7 +13,7 @@ meta (Article) ->
     {Title, "/articles/" ++ Name, Date, Desc}.
 ```
 
-will get rewritten into `1·O(length(Article))`
+will get rewritten into `1·O(N)`
 
 ```erlang
 meta (Article) ->
