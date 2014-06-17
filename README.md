@@ -13,7 +13,7 @@ meta (Article) ->
     {Title, "/articles/" ++ Name, Date, Desc}.
 ```
 
-will get rewritten into
+will get rewritten into `1·O(length(Article))`
 
 ```erlang
 meta (Article) ->
