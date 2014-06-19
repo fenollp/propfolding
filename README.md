@@ -1,6 +1,6 @@
 #propfolding • [GitHub](//github.com/fenollp/propfolding)
 
-A parse transform that turns group calls to `lists:keyfind/3` and such into one-passes.
+A parse transform that turns blunt group calls to `proplists:get_value/2` and such into one-passes.
 
 For example, this code running in `4·O(N)` (where `N = length(Article)`)
 
@@ -32,7 +32,7 @@ meta (Article) ->
 
 using some transformation that could be described thusly:
 
-```c
+```
 # Propfolding -- apply per scope (default applying behaviour since matching a var_id (here, List))
 #define ( Varⁱ = proplists:get_value(Keyⁱ, List) ){2,ⁿ} (
     {(, Varⁱ)ⁿ} =
