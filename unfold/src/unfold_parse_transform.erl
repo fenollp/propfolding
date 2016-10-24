@@ -24,38 +24,58 @@ format_error(E) ->
 %% Internals
 
 parse_transform(Form={attribute,1,file,{Path,1}}) ->
-    io:format("\n>>> ~s\n", [Path]),
+    io:format(" > ~s\n", [Path]),
     [Form];
-parse_transform(Form={function,_, _, _, Clauses}) ->
-    io:format("~p\n", [Form]),
-    io:format("--> ~p\n", [lists:map(fun clause/1, Clauses)]),
+parse_transform(Form={function,_, FName, _, Clauses}) ->
+    S = #{fname => FName
+         ,routines => []
+         },
+    lists:any(fun (Clause) -> clause(S, Clause) end, Clauses)
+        andalso io:format("~p\n\n", [Form]),
     [Form];
 parse_transform(Form) -> [Form].
 
-clause({clause,_, _Args, _Guards, Body}) ->
-    lists:any(fun is_containing_rountines/1, Body).
+clause(S0, {clause,_, _Args, _Guards, Body}) ->
+    S = lists:foldl(fun is_containing_rountines/2, S0, Body),
+    R = nil =/= maps:get(routines_var, S, nil),
+    R andalso io:format("\t~p\n", [S]),
+    R.
 
-is_containing_rountines({match,_, {var,_,_Var}, RHS}) ->
-    %%store Var?
-    is_list_of_funs(RHS);
-is_containing_rountines({call,_
+is_containing_rountines({match,_, {var,_,Var}, RHS}
+                       ,S) ->
+    case is_list_of_funs(RHS, []) of
+        false -> S;
+        Fs ->
+            io:format("~p --- ~p\n", [maps:get(fname, S), Var]),
+            S#{routines_var => Var
+              ,routines => Fs
+              }
+    end;
+is_containing_rountines({call,Loc
                         ,{remote,_, {atom,_,lists}, {atom,_,foldl}}
                         ,[{'fun',_
                           ,{clauses,[{clause,_,
                                       [{var,_,F}, {var,_,Arg}],
                                       [],
                                       [{call,_, {var,_,F}, [{var,_,Arg}]}]}]}}
-                         ,{record,21,r,[]}
-                         ,{var,_,_RoutinesVar}]}) ->
-    true;
-is_containing_rountines(_Expr) ->
-    io:format("??? ~p\n", [_Expr]),
-    false.
+                         ,Acc0
+                         ,{var,_,RoutinesVar}]}
+                       ,#{fname := FName
+                         ,routines_var := RoutinesVar
+                         }=S) ->
+    io:format("~s ::: ~p ~p ~p\n"
+             ,[FName, RoutinesVar, F, Arg]),
+    S#{acc0 => Acc0
+      ,loc => Loc
+      };
+is_containing_rountines(_Expr, S) ->
+    %% io:format("??? ~p\n", [_Expr]),
+    S.
 
-is_list_of_funs({cons,_, {'fun',_, {function,_FName,_Arity}}, Cons}) ->
-    is_list_of_funs(Cons);
-is_list_of_funs({nil,_}) -> true;
-is_list_of_funs(_) -> false.
+is_list_of_funs({cons,_, F={'fun',_, {function,_FName,1}}, Cons}, Fs) ->
+    is_list_of_funs(Cons, [F|Fs]);
+is_list_of_funs({nil,_}, Fs) -> Fs;
+is_list_of_funs(_, _) -> false.
 
 
 %% End of Module.
