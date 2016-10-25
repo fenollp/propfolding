@@ -21,6 +21,8 @@ ebin/unfold_parse_transform.beam: src/unfold_parse_transform.erl
 
 test: tests_c
 tests_%: ebin/unfold_parse_transform.beam
+	erlc -o ebin -pa ebin +to_asm test/unfold_$@.erl
+	mv ebin/unfold_$@.S ebin/unfold_$@_.S
 	erlc -o ebin -pa ebin test/unfold_$@.erl
 	erl -noshell -pa ebin -eval 'R = unfold_tests_a:t(), R = unfold_$@:t().' -s init stop
 	erlc -o ebin -pa ebin $(UNFOLD) +to_asm test/unfold_$@.erl
