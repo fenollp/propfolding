@@ -1,6 +1,8 @@
 UNFOLD = +'{parse_transform,unfold_parse_transform}'
 
 all: ebin/unfold_parse_transform.beam
+	erlc -o ebin -pa ebin +to_asm test/unfold_tests_a.erl
+	mv ebin/unfold_tests_a.S ebin/unfold_tests_a_.S
 	erlc -o ebin -pa ebin test/unfold_tests_a.erl
 	erl -noshell -pa ebin -eval '{r,undefined,"DEUX","trois",undefined,"cinq"} = unfold_tests_a:t().' -s init stop
 	erlc -o ebin -pa ebin $(UNFOLD) +to_asm test/unfold_tests_a.erl
@@ -10,7 +12,7 @@ all: ebin/unfold_parse_transform.beam
 	make tests_b
 	make tests_c
 	make tests_d
-	# make tests_e
+	make tests_e
 	make tests_f
 #
 	bash -c '[[ 0 -eq $$(git status --porcelain ebin/*.S | wc -l) ]]'

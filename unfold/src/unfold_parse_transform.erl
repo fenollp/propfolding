@@ -38,8 +38,12 @@ parse_transform(Form) ->
 
 clause(S0, Clause={clause,_, _Args, _Guards, Body}) ->
     S = lists:foldl(fun is_containing_rountines/2, S0, Body),
-    case maps:get(routines_var, S, nil) of
-        nil -> Clause;
+    case {maps:get(routines_var, S, nil)
+         ,maps:get(call, S, nil)
+         }
+    of
+        {nil, _} -> Clause;
+        {_, nil} -> Clause;
         _ ->
             io:format("  ~p\n>>>~p\n\n", [S, Clause]),
             Clause1 = setelement(5, Clause, rm_match(element(5,Clause), S)),
