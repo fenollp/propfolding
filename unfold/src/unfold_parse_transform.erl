@@ -59,6 +59,7 @@ is_containing_rountines(Match={match,_, {var,_,Var}, RHS}
               ,match => Match
               }
     end;
+
 is_containing_rountines(Call={call,Loc
                              ,{remote,_, {atom,_,lists}, {atom,_,foldl}}
                              ,[{'fun',_
@@ -76,14 +77,21 @@ is_containing_rountines(Call={call,Loc
       ,loc => Loc
       ,call => Call
       };
+
 is_containing_rountines(_Expr, S) ->
     %% io:format("??? ~p\n", [_Expr]),
     S.
 
-is_list_of_funs({cons,_, F={'fun',_, {function,_FName,1}}, Cons}, Fs) ->
+is_list_of_funs({cons,_, F={'fun',_, {function,_FName,1}}
+                ,Cons}, Fs) ->
+    is_list_of_funs(Cons, [F|Fs]);
+is_list_of_funs({cons,_, F={'fun',_, {clauses,[{clause,_, [{var,_,_}],_FGuards,_FBody}]}}
+                ,Cons}, Fs) ->
     is_list_of_funs(Cons, [F|Fs]);
 is_list_of_funs({nil,_}, Fs) -> Fs;
-is_list_of_funs(_, _) -> false.
+is_list_of_funs(_1, _) ->
+    %% io:format("fs? ~p\n", [_1]),
+    false.
 
 
 rm_match([], _) -> [];
@@ -112,6 +120,8 @@ calls([F|Routines], Acc0, Loc) ->
     fun_to_call(F, Loc, calls(Routines, Acc0, Loc)).
 
 fun_to_call(F={'fun',_FLoc,{function,_F,_A}}, Loc, Arg) ->
+    {call,Loc, F, [Arg]};
+fun_to_call(F={'fun',_, {clauses,[{clause,_, [{var,_,_}],_FGuards,_FBody}]}}, Loc, Arg) ->
     {call,Loc, F, [Arg]}.
 
 %% End of Module.
