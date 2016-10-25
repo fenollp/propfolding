@@ -4,7 +4,7 @@
 
 {attributes, []}.
 
-{labels, 25}.
+{labels, 15}.
 
 
 {function, d, 0, 2}.
@@ -12,25 +12,16 @@
     {line,[{location,"test/unfold_tests_d.erl",15}]}.
     {func_info,{atom,unfold_tests_d},{atom,d},0}.
   {label,2}.
-    {allocate_zero,1,0}.
-    {make_fun2,{f,24},0,0,0}.
-    {test_heap,2,1}.
-    {put_list,{x,0},nil,{y,0}}.
-    {make_fun2,{f,22},0,0,0}.
-    {test_heap,2,1}.
-    {put_list,{x,0},{y,0},{y,0}}.
-    {make_fun2,{f,20},0,0,0}.
-    {test_heap,2,1}.
-    {put_list,{x,0},{y,0},{y,0}}.
-    {make_fun2,{f,18},0,0,0}.
-    {test_heap,2,1}.
-    {put_list,{x,0},{y,0},{y,0}}.
-    {make_fun2,{f,16},0,0,0}.
-    {move,{y,0},{x,2}}.
+    {allocate,0,0}.
     {move,{literal,{r,undefined,undefined,undefined,undefined,undefined}},
-          {x,1}}.
+          {x,0}}.
     {line,[{location,"test/unfold_tests_d.erl",21}]}.
-    {call_ext_last,3,{extfunc,lists,foldl,3},1}.
+    {call,1,{f,4}}.
+    {line,[{location,"test/unfold_tests_d.erl",21}]}.
+    {call,1,{f,8}}.
+    {line,[{location,"test/unfold_tests_d.erl",21}]}.
+    {call,1,{f,10}}.
+    {call_last,1,{f,6},0}.
 
 
 {function, two, 1, 4}.
@@ -100,50 +91,3 @@
     {move,{atom,unfold_tests_d},{x,0}}.
     {line,[]}.
     {call_ext_only,2,{extfunc,erlang,get_module_info,2}}.
-
-
-{function, '-d/0-fun-4-', 2, 16}.
-  {label,15}.
-    {line,[{location,"test/unfold_tests_d.erl",21}]}.
-    {func_info,{atom,unfold_tests_d},{atom,'-d/0-fun-4-'},2}.
-  {label,16}.
-    {allocate,0,2}.
-    {move,{x,1},{x,2}}.
-    {move,{x,0},{x,1}}.
-    {move,{x,2},{x,0}}.
-    {line,[{location,"test/unfold_tests_d.erl",21}]}.
-    {call_fun,1}.
-    {deallocate,0}.
-    return.
-
-
-{function, '-d/0-fun-0-', 1, 18}.
-  {label,17}.
-    {line,[{location,"test/unfold_tests_d.erl",16}]}.
-    {func_info,{atom,unfold_tests_d},{atom,'-d/0-fun-0-'},1}.
-  {label,18}.
-    {call_only,1,{f,4}}.
-
-
-{function, '-d/0-fun-1-', 1, 20}.
-  {label,19}.
-    {line,[{location,"test/unfold_tests_d.erl",17}]}.
-    {func_info,{atom,unfold_tests_d},{atom,'-d/0-fun-1-'},1}.
-  {label,20}.
-    {call_only,1,{f,8}}.
-
-
-{function, '-d/0-fun-2-', 1, 22}.
-  {label,21}.
-    {line,[{location,"test/unfold_tests_d.erl",18}]}.
-    {func_info,{atom,unfold_tests_d},{atom,'-d/0-fun-2-'},1}.
-  {label,22}.
-    {call_only,1,{f,10}}.
-
-
-{function, '-d/0-fun-3-', 1, 24}.
-  {label,23}.
-    {line,[{location,"test/unfold_tests_d.erl",19}]}.
-    {func_info,{atom,unfold_tests_d},{atom,'-d/0-fun-3-'},1}.
-  {label,24}.
-    {call_only,1,{f,6}}.
