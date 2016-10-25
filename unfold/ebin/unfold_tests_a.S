@@ -1,16 +1,16 @@
 {module, unfold_tests_a}.  %% version = 0
 
-{exports, [{a,0},{module_info,0},{module_info,1}]}.
+{exports, [{module_info,0},{module_info,1},{t,0}]}.
 
 {attributes, []}.
 
 {labels, 7}.
 
 
-{function, a, 0, 2}.
+{function, t, 0, 2}.
   {label,1}.
-    {line,[{location,"test/unfold_tests_a.erl",15}]}.
-    {func_info,{atom,unfold_tests_a},{atom,a},0}.
+    {line,[{location,"test/unfold_tests_a.erl",14}]}.
+    {func_info,{atom,unfold_tests_a},{atom,t},0}.
   {label,2}.
     {move,{literal,{r,undefined,"DEUX","trois",undefined,"cinq"}},{x,0}}.
     return.

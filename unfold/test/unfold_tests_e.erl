@@ -6,13 +6,12 @@
 
 %% unfold_tests: tests for module unfold.
 
--export([e/0]).
-
+-export([t/0]).
 -record(r, {'1', '2', '3', '4', '5'}).
 
 %% API tests.
 
-e() ->
+t() ->
     Fs = [fun two/1
          ,fun three/1
          ,fun five/1
