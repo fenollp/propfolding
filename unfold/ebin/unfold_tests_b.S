@@ -9,7 +9,7 @@
 
 {function, t, 0, 2}.
   {label,1}.
-    {line,[{location,"test/unfold_tests_b.erl",14}]}.
+    {line,[{location,"test/unfold_tests_b.erl",13}]}.
     {func_info,{atom,unfold_tests_b},{atom,t},0}.
   {label,2}.
     {move,{literal,{r,undefined,"DEUX","trois",undefined,"cinq"}},{x,0}}.

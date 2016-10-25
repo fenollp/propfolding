@@ -2,7 +2,6 @@
 %% See LICENSE for licensing information.
 %% -*- coding: utf-8 -*-
 -module(unfold_tests_c).
--compile({parse_transform, unfold_parse_transform}).
 
 %% unfold_tests: tests for module unfold.
 
