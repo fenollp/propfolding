@@ -26,27 +26,31 @@ format_error(E) ->
 parse_transform(Form={attribute,1,file,{Path,1}}) ->
     io:format(" > ~s\n", [Path]),
     [Form];
-parse_transform(Form={function,_, FName, _, Clauses}) ->
+parse_transform(Form={function,_, FName, Arity, Clauses}) ->
     S = #{fname => FName
+         ,farity => Arity
          ,routines => []
          },
-    lists:any(fun (Clause) -> clause(S, Clause) end, Clauses)
-        andalso io:format("~p\n\n", [Form]),
-    [Form];
-parse_transform(Form) -> [Form].
+    NewClauses = lists:map(fun (Clause) -> clause(S, Clause) end, Clauses),
+    [setelement(5, Form, NewClauses)];
+parse_transform(Form) ->
+    [Form].
 
-clause(S0, {clause,_, _Args, _Guards, Body}) ->
+clause(S0, Clause={clause,_, _Args, _Guards, Body}) ->
     S = lists:foldl(fun is_containing_rountines/2, S0, Body),
-    R = nil =/= maps:get(routines_var, S, nil),
-    R andalso io:format("\t~p\n", [S]),
-    R.
+    case maps:get(routines_var, S, nil) of
+        nil -> Clause;
+        _ ->
+            io:format("  ~p\n~p\n\n", [S, Clause]),
+            Clause
+    end.
 
 is_containing_rountines({match,_, {var,_,Var}, RHS}
                        ,S) ->
     case is_list_of_funs(RHS, []) of
         false -> S;
         Fs ->
-            io:format("~p --- ~p\n", [maps:get(fname, S), Var]),
+            io:format("fun ~p/~p --- ~p\n", [maps:get(fname,S), maps:get(farity,S), Var]),
             S#{routines_var => Var
               ,routines => Fs
               }
