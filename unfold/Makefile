@@ -15,6 +15,7 @@ all: ebin/unfold_parse_transform.beam
 	make tests_d
 	make tests_e
 	make tests_f
+	make tests_g
 #
 	bash -c '[[ 0 -eq $$(git status --porcelain ebin/*.S | wc -l) ]]'
 
