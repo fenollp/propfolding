@@ -107,25 +107,21 @@ rm_match([NotAMatch | Rest], S) ->
 replace_call([], _) -> [];
 replace_call([Call | Rest]
             ,#{call := Call
-              ,loc := Loc
               ,acc0 := Acc0
               ,routines := Routines
               }) ->
-    NewCall = calls(Routines, Acc0, Loc),
+    NewCall = calls(Routines, Acc0),
     [NewCall|Rest];
 replace_call([NotACall|Rest], S) ->
     [NotACall | replace_call(Rest, S)].
 
-loc(Loc, Node) ->
-    setelement(2, Node, Loc).
+calls([], Acc0) -> Acc0;
+calls([F|Routines], Acc0) ->
+    fun_to_call(F, calls(Routines, Acc0)).
 
-calls([], Acc0, Loc) -> loc(Loc, Acc0);
-calls([F|Routines], Acc0, Loc) ->
-    fun_to_call(F, Loc, calls(Routines, Acc0, Loc)).
-
-fun_to_call(F={'fun',_FLoc,{function,_F,_A}}, Loc, Arg) ->
+fun_to_call(F={'fun',Loc,{function,_F,_A}}, Arg) ->
     {call,Loc, F, [Arg]};
-fun_to_call(F={'fun',_, {clauses,[{clause,_, [{var,_,_}],_FGuards,_FBody}]}}, Loc, Arg) ->
+fun_to_call(F={'fun',Loc, {clauses,[{clause,_, [{var,_,_}],_FGuards,_FBody}]}}, Arg) ->
     {call,Loc, F, [Arg]}.
 
 %% End of Module.

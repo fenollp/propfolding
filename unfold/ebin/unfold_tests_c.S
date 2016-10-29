@@ -23,18 +23,18 @@
     {move,{x,0},{x,1}}.
     {move,{literal,{r,undefined,undefined,undefined,undefined,undefined}},
           {x,0}}.
-    {line,[{location,"test/unfold_tests_c.erl",19}]}.
+    {line,[{location,"test/unfold_tests_c.erl",14}]}.
     {call_fun,1}.
     {move,{y,0},{x,1}}.
     {trim,1,2}.
-    {line,[{location,"test/unfold_tests_c.erl",19}]}.
+    {line,[{location,"test/unfold_tests_c.erl",15}]}.
     {call_fun,1}.
     {move,{y,0},{x,1}}.
     {trim,1,1}.
-    {line,[{location,"test/unfold_tests_c.erl",19}]}.
+    {line,[{location,"test/unfold_tests_c.erl",16}]}.
     {call_fun,1}.
     {move,{y,0},{x,1}}.
-    {line,[{location,"test/unfold_tests_c.erl",19}]}.
+    {line,[{location,"test/unfold_tests_c.erl",17}]}.
     {call_fun,1}.
     {deallocate,1}.
     return.
