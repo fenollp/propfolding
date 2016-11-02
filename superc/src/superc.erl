@@ -12,19 +12,17 @@
 
 parse_transform(Forms, _Options) ->
     %% parse_trans:plain_transform(fun pt/1, Forms).
-    case parse_trans:depth_first(
-           fun (Ty, Form, Ctx, Acc) ->
-                   io:format(">>> Ty:~p\n\tForm:~p\n\tCtx:~p\n\tAcc:~p\n", [Ty, Form, Ctx, Acc]),
-                   {Form, Acc}
-           end, [], Forms, _Options
-          )
-    of
+    case parse_trans:depth_first(fun pt/4, #{}, Forms, _Options) of
         {error, Es} -> Es ++ Forms;
         {NewForms, _} ->
             parse_trans:revert(NewForms)
     end.
 
 %% Internals
+
+pt (Ty, Form, Ctx, Acc) ->
+    io:format(">>> Ty:~p\n\tForm:~p\n\tCtx:~p\n\tAcc:~p\n", [Ty, Form, Ctx, Acc]),
+    {Form, Acc}.
 
 pt(_Node) ->
     io:format(">>> ~p\n", [_Node]),
