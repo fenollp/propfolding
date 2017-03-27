@@ -63,3 +63,40 @@ A probably very naive alternative would be to
 * leave out AST nodes with side effects (such as the expression `get()`)
 * execute "clean" leaf ASTs up to a timeout, concurrently (see [`ct_expand`](https://github.com/uwiger/parse_trans/blob/master/src/ct_expand.erl))
 * partially evaluate non leaf ASTs
+
+
+
+I recently discovered [erlscp](https://github.com/weinholt/erlscp), an implementation of Jonsson's supercompiler for Erlang.
+Right now it does not pass tests on 19.2 (it relies on abstract format instead of Core Erlang sadly).
+[Here is Weinholt's thesis from 2013](https://weinholt.se/thesis.pdf), describing in depth his implementation & its shortcomings.
+
+Let's see if it is capable of translating this function clause...
+
+```erlang
+set_response({error, {Cause, AccountId}}, Context, _)
+  when Cause =:= not_in_service;
+       Cause =:= account_disabled ->
+    Data = kz_json:from_list(
+             [{<<"cause">>, kz_term:to_binary(Cause)}
+             ,{<<"account_id">>, AccountId}
+             ]),
+    crossbar_util:response_400(<<"client error">>, Data, Context);
+```
+
+...into these two function clauses. The rest of the potential deforestation is overlooked here.
+
+```erlang
+set_response({error, {not_in_service, AccountId}}, Context, _) ->
+    Data = kz_json:from_list(
+             [{<<"cause">>, <<"not_in_service">>}
+             ,{<<"account_id">>, AccountId}
+             ]),
+    crossbar_util:response_400(<<"client error">>, Data, Context);
+
+set_response({error, {account_disabled, AccountId}}, Context, _) ->
+    Data = kz_json:from_list(
+             [{<<"cause">>, <<"account_disabled">>}
+             ,{<<"account_id">>, AccountId}
+             ]),
+    crossbar_util:response_400(<<"client error">>, Data, Context);
+```
